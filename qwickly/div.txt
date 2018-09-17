@@ -1,0 +1,145 @@
+
+            <script>
+                var script = document.createElement('script');
+                script.onload = function()
+                {
+                    $jq = jQuery.noConflict();
+                    jQuery.getScript("/webapps/QW-qwickly-BB5a30bcf95ea52/newAttendance/scripts/scripts.jsp", function()
+                    {
+                        if(typeof startTimerInstructor === "function")
+                        {
+                            startTimerInstructor();
+                        }
+                        
+                        if(typeof startTimerStudent === "function")
+                        {
+                            startTimerStudent();
+                        }
+                    });
+                    
+                    if(typeof focusStudentPin === "function")
+                    {
+                        focusStudentPin();
+                    }
+                    
+                    jQuery.getScript("/webapps/QW-qwickly-BB5a30bcf95ea52/scripts/jquery-ui.js", function()
+                    {
+                        jQuery('#attendanceDate').datepicker({dateFormat: 'yy/mm/dd'}).datepicker("setDate", new Date());
+                    });
+                    
+                    jQuery("#attendanceHour").keypress(function(e)
+                    {
+                        if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57))
+                        {
+                            return false;
+                        }
+                    });
+                    
+                    jQuery("#attendanceMinute").keypress(function(e)
+                    {
+                        if(e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57))
+                        {
+                            return false;
+                        }
+                    });
+                    
+                    jQuery('#cardSwipe').keypress(function(e)
+                    {
+                        var studentId = jQuery(this).val();
+                        var courseId = jQuery('#swipeCourseId').val();
+                        var regEx = '';
+                        var useLookup = 'chosen';
+                        var alternateSwipeField = 'unchosen';
+                        var alternateSwipeChoice = 'username';
+                        var swipeDate = jQuery('#cardSwipeDate').val();
+                        
+                        var key = e.which;
+                        if(key == 13) //Enter
+                        {
+                            jQuery.ajax({
+                                method: "POST",
+                                url: "/webapps/QW-qwickly-BB5a30bcf95ea52/newAttendance/processes/getStudentUserId.jsp",
+                                contentType: "application/x-www-form-urlencoded;charset=UTF-8",
+                                data: {
+                                    studentId: studentId,
+                                    courseId: courseId,
+                                    regEx: regEx,
+                                    useLookup: useLookup,
+                                    alternateSwipeField: alternateSwipeField,
+                                    alternateSwipeChoice: alternateSwipeChoice,
+                                    swipeDate: swipeDate
+                                }
+                            }).done(function(response)
+                            {
+                                if(response != "")
+                                {
+                                    var resArray = response.split(";");
+                                    jQuery('.cardSwipeInput').val("");
+                                    jQuery('.cardSwipeMessage').html("<div class='studentPhoto photoOf" + resArray[2] + "'></div>" + resArray[0] + " " + resArray[1] + " Confirmed").fadeIn();
+                                    jQuery('.cardSwipeInput').focus();
+                                    setTimeout(function()
+                                    {
+                                        jQuery('.cardSwipeMessage').fadeOut();
+                                    }, 1500);
+                                }
+                                else
+                                {
+                                    jQuery('.cardSwipeInput').val("");
+                                    jQuery('.cardSwipeMessage').html("There was an error reading the card, please try again.").fadeIn();
+                                    jQuery('.cardSwipeInput').focus();
+                                    setTimeout(function()
+                                    {
+                                        jQuery('.cardSwipeMessage').fadeOut();
+                                    }, 1500);
+                                }
+                            });
+                            return false;
+                        }
+                    });
+                }
+                
+                script.src = '/webapps/QW-qwickly-BB5a30bcf95ea52/scripts/jquery.js';
+                script.type = 'text/javascript';
+                var head = document.getElementById("qwicklyAttendanceContainer");
+                head.appendChild(script);
+                </script><script src="/webapps/QW-qwickly-BB5a30bcf95ea52/scripts/jquery.js" type="text/javascript"></script>
+                <div class="topBanner">
+                            <div class="mainHeader bold">ATTENDANCE</div>
+                        </div>
+                        <br clear="all">
+                        <div class="studentReportContainer">
+                            <div class="studentRecordHeader">
+                                <div class="studentName">Riley, Christopher<span style="margin-left:5px;" class="studentUserName">(criley10)</span>
+                                </div>
+                                <div class="courseTitle">71383.201870 - 201870.71383 SYST-469-003 (Fall 2018)</div>
+                                <div class="totalAbsence">
+                                    <div class="absenceHeader">Total Absences:</div>
+                                    <div class="absences">0.0</div>
+                                </div>
+                            </div>
+                            <table id="studentRecordTable">
+                                        <tbody><tr>
+                                            <td class="tableHeader">Date or Title</td>
+                                            <td class="tableHeader">Status</td>
+                                        </tr>
+                                    <tr>
+                                                        <td class="studentDate">
+                                                            August 29</td>
+                                                        <td class="studentStatus">
+                                                            Present</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="studentDate">
+                                                            September 5</td>
+                                                        <td class="studentStatus">
+                                                            Present</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="studentDate">
+                                                            Sep 12, 2018 8:46:23 PM</td>
+                                                        <td class="studentStatus">
+                                                            Present</td>
+                                                    </tr>
+                                                    </tbody></table>
+                                </div>
+                        
