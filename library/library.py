@@ -23,7 +23,7 @@ def find(driver, el):
 timeout = 10
 timeSlots = ['6:30pm', '6:00pm', '5:30pm', '5:00pm', '4:30pm', '4:00pm', '3:30pm', '3:00pm']
 #fetches the webdriver and opens the page in the driver
-driver = webdriver.Chrome(executable_path=r"C:/Users/Christopher/Downloads/Software/chromedriver_win32/chromedriver.exe")
+driver = webdriver.Chrome(executable_path=r"C:/Program Files/Python36/Scripts/chromedriver.exe")
 driver.implicitly_wait(10)
 wait = WebDriverWait(driver, 10)
 driver.get('https://gmu.libcal.com/spaces?lid=1205&gid=2118')
@@ -37,19 +37,18 @@ for n in dates:
 	if n.text == str(nextWeek):
 		date = n
 date.click()
-boxes = driver.find_elements_by_xpath("//a[contains(@title, '4701')]")
-times = [x for x in boxes for y in timeSlots if y in x.get_attribute('title')]
-for n in range(0,len(times)):
+for n in range(0, len(timeSlots)):
 	print(n)
 	if n == 0:
-		times[n].click()
+		element = driver.find_element_by_xpath("//a[contains(@title, '4701') and contains(@title, '"+timeSlots[n]+"')]").click()
 		continue
 	else:
-		print('in else')
+		print(timeSlots[n])
 		try:
-			element_present = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, '//a[@title='+times[n].get_attribute('title'))))
+			element_present = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@title, '4701') and contains(@title, '"+timeSlots[n]+"')]")))
+			element_present.click()
 		finally:
-			times[n].click()
+			print('done')
 
 
 
