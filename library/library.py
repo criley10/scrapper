@@ -26,7 +26,9 @@ timeSlots = ['6:30pm', '6:00pm', '5:30pm', '5:00pm', '4:30pm', '4:00pm', '3:30pm
 nextWeek = oneWeek()
 
 #fetches the webdriver and opens the page in the driver, scrolls and clicks button to open calendar
-driver = webdriver.Chrome(executable_path=r"C:/Program Files/Python36/Scripts/chromedriver.exe")
+#driver = webdriver.Chrome(executable_path=r"C:/Program Files/Python36/Scripts/chromedriver.exe")
+driver = webdriver.Chrome(executable_path=r"C:/Users/Christopher/AppData/Local/Programs/Python/Python36-32/Scripts/chromedriver.exe")
+
 driver.implicitly_wait(10)
 wait = WebDriverWait(driver, 10)
 driver.get('https://gmu.libcal.com/spaces?lid=1205&gid=2118')
@@ -40,17 +42,22 @@ for n in dates:
 		date = n
 date.click()
 
+
+
 #clicks the time boxes in order
 for n in range(0, len(timeSlots)):
-	if n == 0:
-		time = driver.find_element_by_xpath("//a[contains(@title, '4701') and contains(@title, '"+timeSlots[n]+"')]").click()
-		select = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//select[contains(@id, 'bookingend_"+str(n+1)+"')]")))
-		continue
-	else:
-		print(timeSlots[n])
-		time = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@title, '4701') and contains(@title, '"+timeSlots[n]+"')]")))
-		time.click()
-		select = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//select[contains(@id, 'bookingend_"+str(n+1)+"')]")))
+	if 'avail' in driver.find_element_by_xpath("//a[contains(@title, '4603') and contains(@title, '"+timeSlots[n]+"')]").get_attribute('class'):
+		if n == 0 :
+			time = driver.find_element_by_xpath("//a[contains(@title, '4603') and contains(@title, '"+timeSlots[n]+"')]").click()
+			select = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//select[contains(@id, 'bookingend_"+str(n+1)+"')]")))
+			continue
+		else:
+			try:
+				print(timeSlots[n])
+				time = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@title, '4603') and contains(@title, '"+timeSlots[n]+"')]")))
+				time.click()
+			finally:
+				select = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//select[contains(@id, 'bookingend_"+str(n+1)+"')]")))
 
 #submit and continue buttons
 submitBtn = driver.find_element_by_xpath("//button[@id='submit_times']").click()
@@ -77,6 +84,6 @@ subEmail = driver.find_element_by_xpath("//input[@type='submit']").click()
 passOutlook = driver.find_element_by_xpath("//input[@id='i0118']")
 passOutlook.clear()
 passOutlook.send_keys('Crex204!')
-signedInBtn = driver.find_element_by_xpath("//input[@class='btn btn-block btn-primary']").click()
+signedInBtn = driver.find_element_by_xpath("//input[@id='idBtn_Back']").click()
 timeBtn = driver.find_element_by_xpath("//select[@name='tzid']/option[@value='Eastern Standard Time']").click()
 saveBtn = driver.find_element_by_xpath("//div[@role='button']").click()
