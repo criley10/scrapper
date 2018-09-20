@@ -107,7 +107,33 @@
                             <div class="mainHeader bold">ATTENDANCE</div>
                         </div>
                         <br clear="all">
-                        <div class="studentReportContainer">
+                        <div class="checkInContainer">
+                                    <div class="endCheckInDescription bold">Check In is currently running. <br><br> Enter the 4-digit number provided by your instructor.</div>
+                                </div>
+                                <form id="checkInForm" method="post" action="/webapps/QW-qwickly-BB5a30bcf95ea52/newAttendance/qwicklyTakeAttendance.jsp?course_id=_338830_1">
+                                    <div class="checkInValues">
+                                        <input maxlength="4" class="checkInCode" type="text" name="studentPin" id="studentPin">
+                                            <script>
+                                            function focusStudentPin()
+                                            {
+                                                jQuery('#studentPin').focus();
+                                            }
+                                            </script>
+                                            <div class="timerLabel">
+                                                check in period will close in </div>
+                                            <div class="checkInTimer"></div>
+                                            <script>
+                                            function startTimerStudent()
+                                            {
+                                                startCheckInTimer(42);
+                                            }
+                                            </script>
+                                            <input type="hidden" name="studentSubmission" value="Submit"> <br>
+                                    <input class="attendanceSubmitButton clickable" type="submit" name="studentCheckIn" value="Check In">
+                                    <br>
+                                    </div>
+                                </form>
+                            <div class="studentReportContainer">
                             <div class="studentRecordHeader">
                                 <div class="studentName">Riley, Christopher<span style="margin-left:5px;" class="studentUserName">(criley10)</span>
                                 </div>

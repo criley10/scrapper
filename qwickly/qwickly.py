@@ -4,6 +4,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 import sys
 
+timeout = 30
+
 #fetches the webdriver and opens the page in the driver
 driver = webdriver.Chrome(executable_path=r"C:/Users/Christopher/Downloads/Software/chromedriver_win32/chromedriver.exe")
 driver.implicitly_wait(10)
@@ -27,11 +29,23 @@ accept.click()
 
 driver.get('https://mymasonportal.gmu.edu/webapps/QW-qwickly-BB5a30bcf95ea52/newAttendance/qwicklyTakeAttendance.jsp?course_id=_338830_1')
 
+# done = False
+# while done == False:
+# 	try:
+# 		checkIn = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//a[@id='checkInBtn']"))) #CHANGE ME
+# 		checkIn.click()
+# 		break
+# 	except:
+# 		print("Element not found")
+# 	finally:
+# 		driver.refresh()
+
+
 container = driver.find_element_by_xpath("//div[@id='qwicklyAttendanceContainer']")
 file = open('C:/Users/Christopher/Documents/python/scrapper/qwickly/div.txt', 'w')
 file.write(str(container.get_attribute('innerHTML')))
 file.close()
 
-driver.close()
+#driver.close()
 
 
