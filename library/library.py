@@ -21,6 +21,7 @@ def find(driver, el):
         return False
 
 #defining global variables
+ignored_exceptions=('NoSuchElementException', 'StaleElementReferenceException')
 timeout = 10
 timeSlots = ['6:30pm', '6:00pm', '5:30pm', '5:00pm', '4:30pm', '4:00pm', '3:30pm', '3:00pm']
 nextWeek = oneWeek()
@@ -37,6 +38,10 @@ dateBtn = driver.find_element_by_xpath("//button[@class='fc-goToDate-button btn 
 
 #finds the day one week from today
 dates = driver.find_elements_by_xpath("//td[@class='day']")
+dateNums = [x.text for x in dates]
+if len(dateNums) < 7:
+	nextMonth = driver.find_element_by_xpath("//th[@class='next']").click()
+	dates = driver.find_elements_by_xpath("//td[@class='day']")
 for n in dates:
 	if n.text == str(nextWeek):
 		date = n
@@ -78,12 +83,21 @@ subBookingBtn = driver.find_element_by_xpath("//button[@id='btn-form-submit']").
 driver.get("https://www.office.com/")
 signInBtn = driver.find_element_by_xpath("//a[@id='hero-banner-sign-in-to-office-365-link']").click()
 emailOutlook = driver.find_element_by_xpath("//input[@id='i0116']")
-emailOutlook.clear()
 emailOutlook.send_keys('criley10@masonlive.gmu.edu')
 subEmail = driver.find_element_by_xpath("//input[@type='submit']").click()
 passOutlook = driver.find_element_by_xpath("//input[@id='i0118']")
-passOutlook.clear()
 passOutlook.send_keys('Crex204!')
-signedInBtn = driver.find_element_by_xpath("//input[@id='idBtn_Back']").click()
-timeBtn = driver.find_element_by_xpath("//select[@name='tzid']/option[@value='Eastern Standard Time']").click()
-saveBtn = driver.find_element_by_xpath("//div[@role='button']").click()
+signedInBtn = WebDriverWait(driver, timeout, ignored_exceptions=ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='idSIButton9']"))).click()
+saveInfoBtn = WebDriverWait(driver, timeout, ignored_exceptions=ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='idSIButton9']"))).click()
+outlook = driver.find_element_by_xpath('//span[@class="ms-ohp-Icon ms-ohp-Icon--outlookLogo ms-ohp-Icon--outlookLogoFill ng-star-inserted"]')
+outlook.click()
+driver.switch_to.window(driver.window_handles[1])
+email = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, '//div[@id="_ariaId_24"]'))).click()
+emailContent = driver.find_element_by_xpath('//div[@class="x_content"]')
+if 'has been confirmed' in emailContent.text:  
+    driver.close() 
+    driver.switch_to.window(driver.window_handles[0])                             
+else: 
+	verifyLink = driver.find_element_by_xpath("//a[contains(@href, 'confirm_ebooking')]").click()
+	driver.switch_to.window(driver.window_handles[2])  
+
