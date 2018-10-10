@@ -3,7 +3,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-import sys
 import datetime
 from datetime import timedelta
 
@@ -23,7 +22,7 @@ def find(driver, el):
 #defining global variables
 ignored_exceptions=('NoSuchElementException', 'StaleElementReferenceException')
 timeout = 10
-timeSlots = ['6:30pm', '6:00pm', '5:30pm', '5:00pm', '4:30pm', '4:00pm', '3:30pm', '3:00pm']
+timeSlots = ['7:30pm', '7:00pm', '6:30pm', '6:00pm', '5:30pm', '5:00pm', '4:30pm', '4:00pm']
 nextWeek = oneWeek()
 
 #fetches the webdriver and opens the page in the driver, scrolls and clicks button to open calendar
@@ -51,16 +50,16 @@ date.click()
 
 #clicks the time boxes in order
 for n in range(0, len(timeSlots)):
-	if 'avail' in driver.find_element_by_xpath("//a[contains(@title, '4603') and contains(@title, '"+timeSlots[n]+"')]").get_attribute('class'):
+	if 'avail' in driver.find_element_by_xpath("//a[contains(@title, '3705') and contains(@title, '"+timeSlots[n]+"')]").get_attribute('class'):
 		if n == 0 :
-			time = driver.find_element_by_xpath("//a[contains(@title, '4603') and contains(@title, '"+timeSlots[n]+"')]").click()
+			time = driver.find_element_by_xpath("//a[contains(@title, '3705') and contains(@title, '"+timeSlots[n]+"')]").click()
 			select = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//select[contains(@id, 'bookingend_"+str(n+1)+"')]")))
 			continue
 		else:
 			try:
 				print(timeSlots[n])
-				time = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//a[contains(@title, '4603') and contains(@title, '"+timeSlots[n]+"')]")))
-				time.click()
+				time = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, 
+					"//a[contains(@title, '3705') and contains(@title, '"+timeSlots[n]+"')]"))).click()
 			finally:
 				select = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//select[contains(@id, 'bookingend_"+str(n+1)+"')]")))
 
@@ -80,24 +79,29 @@ email.clear()
 email.send_keys('criley10@gmu.edu')
 subBookingBtn = driver.find_element_by_xpath("//button[@id='btn-form-submit']").click()
 
+#goes to office and signs into outlook
 driver.get("https://www.office.com/")
 signInBtn = driver.find_element_by_xpath("//a[@id='hero-banner-sign-in-to-office-365-link']").click()
 emailOutlook = driver.find_element_by_xpath("//input[@id='i0116']")
 emailOutlook.send_keys('criley10@masonlive.gmu.edu')
 subEmail = driver.find_element_by_xpath("//input[@type='submit']").click()
-passOutlook = driver.find_element_by_xpath("//input[@id='i0118']")
+passOutlook = WebDriverWait(driver, timeout, ignored_exceptions=ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='i0118']")))
 passOutlook.send_keys('Crex204!')
 signedInBtn = WebDriverWait(driver, timeout, ignored_exceptions=ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='idSIButton9']"))).click()
 saveInfoBtn = WebDriverWait(driver, timeout, ignored_exceptions=ignored_exceptions).until(EC.element_to_be_clickable((By.XPATH, "//input[@id='idSIButton9']"))).click()
 outlook = driver.find_element_by_xpath('//span[@class="ms-ohp-Icon ms-ohp-Icon--outlookLogo ms-ohp-Icon--outlookLogoFill ng-star-inserted"]')
 outlook.click()
+
+#switches tabs and opens the first email and reads content
 driver.switch_to.window(driver.window_handles[1])
-email = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, '//div[@id="_ariaId_24"]'))).click()
+email = WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH, '//div[@id="_ariaId_24"]'))).click()
 emailContent = driver.find_element_by_xpath('//div[@class="x_content"]')
 if 'has been confirmed' in emailContent.text:  
     driver.close() 
-    driver.switch_to.window(driver.window_handles[0])                             
+    driver.switch_to.window(driver.window_handles[0])
+    driver.close()                             
 else: 
+	#if the email said that we need to verify it clicks the link and verifies
 	verifyLink = driver.find_element_by_xpath("//a[contains(@href, 'confirm_ebooking')]").click()
 	driver.switch_to.window(driver.window_handles[2])  
 
