@@ -19,19 +19,19 @@ def find(driver, el):
         return element
     else:
         return False
-errors = open('errors.txt', 'w')
+errors = open(r'C:/Users/Christopher/Documents/python/scrapper/library/errors.txt', 'w')
 try:
 	#defining global variables
 	ignored_exceptions=('NoSuchElementException', 'StaleElementReferenceException')
 	timeout = 10
-	timeSlots = ['7:30pm', '7:00pm', '6:30pm', '6:00pm', '5:30pm', '5:00pm', '4:30pm', '4:00pm']
+	timeSlots = ['7:00pm', '6:30pm', '6:00pm', '5:30pm', '5:00pm', '4:30pm', '4:00pm', '3:30pm']
 	nextWeek = oneWeek()
 
 	#fetches the webdriver and opens the page in the driver, scrolls and clicks button to open calendar
-	#driver = webdriver.Chrome(executable_path=r"C:/Program Files/Python36/Scripts/chromedriver.exe")
+	#driver = webdriver.Chrome(executable_path=r"C:/Users/Christopher/AppData/Local/Programs/Python/Python36-32/Scripts/chromedriver.exe")
 	chrome_options = Options()
 	chrome_options.add_argument("--headless")
-	driver = webdriver.Chrome(executable_path=r"C:/Users/Christopher/AppData/Local/Programs/Python/Python36-32/Scripts/chromedriver.exe",  chrome_options=chrome_options)
+	driver = webdriver.Chrome(executable_path=r"C:/Program Files/Python36/Scripts/chromedriver.exe",chrome_options=chrome_options)
 	print('Created Driver')
 
 	driver.implicitly_wait(10)
@@ -56,16 +56,16 @@ try:
 
 	#clicks the time boxes in order
 	for n in range(0, len(timeSlots)):
-		if 'avail' in driver.find_element_by_xpath("//a[contains(@title, '4701') and contains(@title, '"+timeSlots[n]+"')]").get_attribute('class'):
+		if 'avail' in driver.find_element_by_xpath("//a[contains(@title, '4705') and contains(@title, '"+timeSlots[n]+"')]").get_attribute('class'):
 			if n == 0 :
-				time = driver.find_element_by_xpath("//a[contains(@title, '4701') and contains(@title, '"+timeSlots[n]+"')]").click()
+				time = driver.find_element_by_xpath("//a[contains(@title, '4705') and contains(@title, '"+timeSlots[n]+"')]").click()
 				select = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//select[contains(@id, 'bookingend_"+str(n+1)+"')]")))
 				continue
 			else:
 				try:
 					print(timeSlots[n])
 					time = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, 
-						"//a[contains(@title, '4701') and contains(@title, '"+timeSlots[n]+"')]"))).click()
+						"//a[contains(@title, '4705') and contains(@title, '"+timeSlots[n]+"')]"))).click()
 				finally:
 					select = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//select[contains(@id, 'bookingend_"+str(n+1)+"')]")))
 	print('Done clicking times')
@@ -88,8 +88,10 @@ try:
 	subBookingBtn = driver.find_element_by_xpath("//button[@id='btn-form-submit']").click()
 	print('Submitted bookings')
 	print('done')
+	
 except Exception as e:
-   	errors.write(str(e))
+    errors.write(str(e))
 finally:
-	driver.close()
-	exit()
+ 	driver.close()
+ 	errors.close()	
+	
