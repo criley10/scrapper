@@ -56,16 +56,16 @@ try:
 
 	#clicks the time boxes in order
 	for n in range(0, len(timeSlots)):
-		if 'avail' in driver.find_element_by_xpath("//a[contains(@title, '4705') and contains(@title, '"+timeSlots[n]+"')]").get_attribute('class'):
+		if 'avail' in driver.find_element_by_xpath("//a[contains(@title, '4003') and contains(@title, '"+timeSlots[n]+"')]").get_attribute('class'):
 			if n == 0 :
-				time = driver.find_element_by_xpath("//a[contains(@title, '4705') and contains(@title, '"+timeSlots[n]+"')]").click()
+				time = driver.find_element_by_xpath("//a[contains(@title, '4003') and contains(@title, '"+timeSlots[n]+"')]").click()
 				select = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//select[contains(@id, 'bookingend_"+str(n+1)+"')]")))
 				continue
 			else:
 				try:
 					print(timeSlots[n])
 					time = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, 
-						"//a[contains(@title, '4705') and contains(@title, '"+timeSlots[n]+"')]"))).click()
+						"//a[contains(@title, '4003') and contains(@title, '"+timeSlots[n]+"')]"))).click()
 				finally:
 					select = WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, "//select[contains(@id, 'bookingend_"+str(n+1)+"')]")))
 	print('Done clicking times')

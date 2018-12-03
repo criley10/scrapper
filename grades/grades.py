@@ -65,7 +65,7 @@ if active.text.split('\n')[2].split(',')[0] != gradesList[-1][1].strip():
 		for n in returned:
 			print(n[1])
 		x = writeGrades([active])
-		print(x[1])
+		print(x[0][1])
 	else:
 		print("2 grades added since last run")
 		returned = writeGrades([streamList[0], active])

@@ -8,5 +8,4 @@ IT-209-002, Quiz #5, 49.00/50
 IT-214-002, SafeAssign: Project, Part I Submission, 73.00/100
 IT-214-002, Project Draft, 100.00/100
 IT-214-002, Homework Assignment 10 Submission, 97.00/100
-IT-214-002, Homework Assignment 10 Submission, 97.00/100
 IT-214-002, Project: Part II Submission, 60.00/100
